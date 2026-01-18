@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>装箱单查看</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        input { padding: 10px; width: 200px; margin: 10px; }
+        button { padding: 10px 20px; background: #0366d6; color: white; border: none; cursor: pointer; }
+        .image-container { margin-top: 30px; display: none; }
+        img { max-width: 100%; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 装箱单查看</h1>
+        <p>请输入密码查看装箱单</p>
+        <input type="password" id="password" placeholder="输入密码">
+        <button onclick="verifyPassword()">确认</button>
+        <div id="error" style="color: red; margin-top: 10px;"></div>
+        
+        <div class="image-container" id="imageContainer">
+            <h2>装箱单详情</h2>
+            <img id="packingImage" src="">
+        </div>
+    </div>
+
+    <script>
+        // 这里放你的密码，修改为你自己的密码
+        const CORRECT_PASSWORD = "yourpassword123";
+        
+        function verifyPassword() {
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
+            const imageContainer = document.getElementById('imageContainer');
+            const packingImage = document.getElementById('packingImage');
+            
+            if (password === CORRECT_PASSWORD) {
+                errorDiv.textContent = '';
+                
+                // 从URL获取box参数
+                const urlParams = new URLSearchParams(window.location.search);
+                const boxImage = urlParams.get('box');
+                
+                if (boxImage) {
+                    // 显示图片
+                    packingImage.src = '/images/' + boxImage;
+                    imageContainer.style.display = 'block';
+                } else {
+                    errorDiv.textContent = '未找到装箱单图片';
+                }
+            } else {
+                errorDiv.textContent = '密码错误，请重试！';
+                imageContainer.style.display = 'none';
+            }
+        }
+        
+        // 支持按回车键提交
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyPassword();
+            }
+        });
+    </script>
+</body>
+</html>
